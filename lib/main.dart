@@ -28,7 +28,9 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 0, 255, 170)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(255, 0, 255, 170),
+        ),
       ),
       home: const MyHomePage(title: '2023479030'),
     );
@@ -55,6 +57,47 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  Color _currentColor = const Color.fromARGB(255, 255, 255, 255);
+
+  void ChangeColor(
+    Color newColor,
+  ) //ignorar, esto lo que hacia era cambiar en base al numero del contador
+  {
+    setState(() {
+      _currentColor = newColor; //actualiza el color actual
+    });
+  }
+
+  void changeColor2() {
+    setState(() {
+      if (_currentColor ==
+          const Color.fromARGB(255, 255, 255, 255)) //color base
+      {
+        _currentColor = const Color.fromARGB(
+          255,
+          118,
+          68,
+          233,
+        ); //cambia a morado
+      } else if (_currentColor ==
+          const Color.fromARGB(255, 118, 68, 233)) //morado
+      {
+        _currentColor = const Color.fromARGB(
+          255,
+          57,
+          205,
+          250,
+        ); //cambia a celeste
+      } else {
+        _currentColor = const Color.fromARGB(
+          255,
+          255,
+          255,
+          255,
+        ); //cambia a blanco
+      }
+    });
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -88,6 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter = 0;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -97,6 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
+      backgroundColor: _currentColor,
       appBar: AppBar(
         // TRY THIS: Try changing the color here to a specific color (to
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
@@ -134,27 +179,35 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: () {
+          //ChangeColor(Colors.primaries[_counter % Colors.primaries.length]);}
+          changeColor2();
+          //print("Boton apretado");
+        },
         child: const Icon(Icons.color_lens_outlined),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-      persistentFooterButtons: <Widget>[
-        FloatingActionButton(
+      ),
+      persistentFooterButtons: ChangeCounterValue,
+    );
+  }
+
+  List<Widget> get ChangeCounterValue {
+    return <Widget>[
+      //botones persistentes en el pie de la pantalla
+      FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
-        FloatingActionButton(
-          onPressed: _decrementCounter,
-          tooltip: 'Decrement',
-          child: const Icon(Icons.remove),
-        ),
-        FloatingActionButton(
-          onPressed: _resetCounter,
-          tooltip: 'Reset',
-          child: const Icon(Icons.refresh),
-        ),
-      ],
-    );
+      FloatingActionButton(
+        onPressed: _decrementCounter,
+        tooltip: 'Decrement',
+        child: const Icon(Icons.remove),
+      ),
+      FloatingActionButton(
+        onPressed: _resetCounter,
+        tooltip: 'Reset',
+        child: const Icon(Icons.refresh),
+      ),
+    ];
   }
 }
