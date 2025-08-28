@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:logger/logger.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -10,6 +10,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
+    var logger = Logger();
+    logger.d("Logger is working!");
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -171,6 +175,22 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text('Pixel Art sobre una grrilla personalizable'),
+            //Image.asset("assets/Pixel-Art-Hot-Pepper-2-1.webp", width: 100,height: 100,),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  Image.asset('assets/Pixel-Art-Hot-Pepper-2-1.webp', width: 400,height: 400,),
+              
+                  Image.asset('assets/Pixel-Art-Pizza-2.webp',width: 400,height: 400,),
+              
+                  Image.asset('assets/Pixel-Art-Watermelon-3.webp',width: 400,height: 400,),
+                ],
+              ),
+            ),
+
+
+
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
