@@ -3,6 +3,7 @@ import 'package:flutter_aplication_lab2/pages/about.dart';
 import 'package:flutter_aplication_lab2/pages/list_art.dart';
 import 'package:flutter_aplication_lab2/pages/list_creation.dart';
 import 'package:flutter_aplication_lab2/pages/pixelArtScreen.dart';
+import 'package:flutter_aplication_lab2/pages/settings.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -78,7 +79,16 @@ class _MyHomePageState extends State<MyHomePage> {
   void to_pixelArtScreen() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Pixelartscreen(title: 'Pixel Art Screen')),
+      MaterialPageRoute(
+        builder: (context) => Pixelartscreen(title: 'Pixel Art Screen'),
+      ),
+    );
+  }
+
+  void to_settings() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SettingsScreen()),
     );
   }
 
@@ -118,6 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
               );
             },
           ),
+          IconButton(icon: const Icon(Icons.settings), onPressed: to_settings),
         ],
       ),
       body: Center(
@@ -173,9 +184,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: const Icon(Icons.create),
                   ),
                   ElevatedButton(
-                    //onPressed: to_ListCreation,
-                    onPressed: to_pixelArtScreen,
+                    onPressed: to_ListCreation,
+                    //onPressed: to_pixelArtScreen,
+                    //onPressed: to_settings,
                     child: const Icon(Icons.list),
+                  ),
+                  ElevatedButton(
+                    onPressed: to_pixelArtScreen,
+                    child: const Icon(Icons.brush),
                   ),
                 ],
               ),

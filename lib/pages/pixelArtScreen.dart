@@ -4,23 +4,25 @@ import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_aplication_lab2/providers/configurationData.dart';
 
-class Pixelartscreen extends MyHomePage
-{
-  
+class Pixelartscreen extends MyHomePage {
   const Pixelartscreen({super.key, required super.title});
   @override
-   PixelartscreenState createState() => PixelartscreenState();
-
-
-  
+  PixelartscreenState createState() => PixelartscreenState();
 }
-class PixelartscreenState extends State<Pixelartscreen>
-{
+
+class PixelartscreenState extends State<Pixelartscreen> {
   int _sizeGrid = 32;
+  String _palette = "default";
   @override
   void initState() {
-   _sizeGrid = context.read<AppData>().size;
-    Logger().d("initState() called: " + _sizeGrid.toString());
+    _sizeGrid = context.read<AppData>().size;
+    _palette = context.read<AppData>().palette;
+    Logger().d(
+      "initState() called SizeGrid: " +
+          _sizeGrid.toString() +
+          " Palette: " +
+          context.read<AppData>().palette,
+    );
   }
 
   @override
@@ -34,42 +36,39 @@ class PixelartscreenState extends State<Pixelartscreen>
     Logger().d("didUpdateWidget() called");
   }
 
-  @override 
+  @override
   void deactivate() {
     Logger().d("deactivate() called");
   }
+
   @override
   void dispose() {
     Logger().d("dispose() called");
-    super.dispose(); 
-   
+    super.dispose();
   }
-  @override   
+
+  @override
   void reassemble() {
     Logger().d("reassemble() called");
   }
 
-  
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       body: Center(
-  child: Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      const Text("Pixel Art Screen"),
-      ElevatedButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        child: const Text('Go Back'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text("Pixel Art Screen"),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Go Back'),
+            ),
+          ],
+        ),
       ),
-    ],
-  ),
-),
-      
-    ); 
-   }
-
+    );
+  }
 }
