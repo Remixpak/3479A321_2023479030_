@@ -1,5 +1,3 @@
-import 'dart:nativewrappers/_internal/vm/lib/ffi_native_type_patch.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesService {

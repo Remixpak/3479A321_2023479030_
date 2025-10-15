@@ -79,9 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void to_pixelArtScreen() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => Pixelartscreen(title: 'Pixel Art Screen'),
-      ),
+      MaterialPageRoute(builder: (context) => Pixelartscreen()),
     );
   }
 

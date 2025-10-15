@@ -4,7 +4,7 @@ import 'package:flutter_aplication_lab2/services/sharedPreferences.dart';
 class AppData extends ChangeNotifier {
   int _size = 16;
   int get size => _size;
-  SharedPreferencesService _prefsService = SharedPreferencesService();
+  final SharedPreferencesService _prefsService = SharedPreferencesService();
   /*void setSize(int newSize) {
     _size = newSize;
     notifyListeners(); //segun entedí esto notifica a los widgets que dependan de este valor
