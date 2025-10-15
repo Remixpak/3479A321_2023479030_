@@ -18,6 +18,7 @@ class Pixelartscreen extends StatefulWidget {
 class PixelartscreenState extends State<Pixelartscreen> {
   int _sizeGrid = 32;
   String _palette = "default";
+  bool _showNumbers = true;
 
   Color _selectedColor = Colors.black;
   final List<Color> _listColors = [
@@ -40,13 +41,18 @@ class PixelartscreenState extends State<Pixelartscreen> {
   );
   @override
   void initState() {
+    super.initState();
     _sizeGrid = context.read<AppData>().size;
     _palette = context.read<AppData>().palette;
+    _cellColors = List<Color>.generate(
+      _sizeGrid * _sizeGrid,
+      (index) => Colors.transparent,
+    );
     Logger().d(
       "initState() called SizeGrid: " +
           _sizeGrid.toString() +
           " Palette: " +
-          context.read<AppData>().palette,
+          _palette,
     );
   }
 
@@ -77,106 +83,23 @@ class PixelartscreenState extends State<Pixelartscreen> {
     Logger().d("reassemble() called");
   }
 
-  /*@override
-  Widget build(BuildContext context) {
-    final appData = context.watch<AppData>();
-
-    if (_cellColors.length != appData.size * appData.size) {
-      _cellColors = List<Color>.generate(
-        appData.size * appData.size,
-        (index) => Colors.transparent,
-      );
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Pixel Art (${appData.size}x${appData.size})'),
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('${appData.size} x ${appData.size}'),
-                  ElevatedButton(
-                    onPressed: () {
-                      Logger().d('Button pressed');
-                    },
-                    child: const Text('Submit'),
-                  ),
-                ],
-              ),
-            ),
-
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: appData.size,
-                ),
-                itemCount: appData.size * appData.size,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _cellColors[index] = _selectedColor;
-                      });
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.all(1),
-                      color: _cellColors[index],
-                    ),
-                  );
-                },
-              ),
-            ),
-
-       
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              color: Colors.grey[200],
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: _listColors.map((color) {
-                    final bool isSelected = color == _selectedColor;
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedColor = color;
-                        });
-                      },
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        padding: EdgeInsets.all(isSelected ? 12 : 8),
-                        decoration: BoxDecoration(
-                          color: color,
-                          shape: BoxShape.circle,
-                          border: isSelected
-                              ? Border.all(color: Colors.black, width: 2)
-                              : null,
-                        ),
-                        width: isSelected ? 36 : 28,
-                        height: isSelected ? 36 : 28,
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Creation Process')),
+      appBar: AppBar(
+        title: const Text('Creation Process'),
+        actions: [
+          IconButton(
+            icon: Icon(_showNumbers ? Icons.visibility : Icons.visibility_off),
+            tooltip: _showNumbers ? 'Ocultar números' : 'Mostrar números',
+            onPressed: () {
+              setState(() {
+                _showNumbers = !_showNumbers;
+              });
+            },
+          ),
+        ],
+      ),
       body: SafeArea(
         // Wrap the Column with SafeArea
         child: Column(
@@ -230,14 +153,16 @@ class PixelartscreenState extends State<Pixelartscreen> {
 
                       color: _cellColors[index],
                       child: Center(
-                        child: Text(
-                          '$index',
-                          style: TextStyle(
-                            color: _cellColors[index] == Colors.black
-                                ? Colors.white
-                                : Colors.black,
-                          ),
-                        ),
+                        child: _showNumbers
+                            ? Text(
+                                '$index',
+                                style: TextStyle(
+                                  color: _cellColors[index] == Colors.black
+                                      ? Colors.white
+                                      : Colors.black,
+                                ),
+                              )
+                            : null,
                       ),
                     ),
                   );
