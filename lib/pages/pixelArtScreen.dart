@@ -42,6 +42,11 @@ class PixelartscreenState extends State<Pixelartscreen> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _sizeGrid = context.read<AppData>().size;
     _palette = context.read<AppData>().palette;
     _cellColors = List<Color>.generate(
@@ -49,17 +54,11 @@ class PixelartscreenState extends State<Pixelartscreen> {
       (index) => Colors.transparent,
     );
     Logger().d(
-      "initState() called SizeGrid: " +
+      "didChangeDependencies() called SizeGrid: " +
           _sizeGrid.toString() +
           " Palette: " +
           _palette,
     );
-  }
-
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    Logger().d("didChangeDependencies() called");
   }
 
   @override
