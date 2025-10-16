@@ -39,4 +39,9 @@ class AppData extends ChangeNotifier {
     await _prefsService.savePalette(newPalette);
     notifyListeners();
   }
+
+  /*void addCreation(String filePath)
+  {
+
+  }*/
 }

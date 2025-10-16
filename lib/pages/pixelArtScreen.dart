@@ -3,7 +3,9 @@ import 'package:flutter_aplication_lab2/pages/my_home_page.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_aplication_lab2/providers/configurationData.dart';
-
+import 'package:path_provider/path_provider.dart';
+import 'dart:ui' as ui;
+import 'dart:io';
 /*class Pixelartscreen extends MyHomePage {
   const Pixelartscreen({super.key, required super.title});
   @override
@@ -82,6 +84,36 @@ class PixelartscreenState extends State<Pixelartscreen> {
     Logger().d("reassemble() called");
   }
 
+  Future<void> _savePixelArt() async {
+final recorder = ui.PictureRecorder();
+final canvas = Canvas(recorder, Rect.fromLTWH(0, 0, _sizeGrid * 20.0,
+_sizeGrid * 20.0));
+for (int row = 0; row < _sizeGrid; row++) {
+for (int col = 0; col < _sizeGrid; col++) {
+final color = _cellColors[row * _sizeGrid + col];
+final paint = Paint()..color = color;
+final rect = Rect.fromLTWH(col * 20.0, row * 20.0, 20.0, 20.0);
+canvas.drawRect(rect, paint);
+}
+}
+final picture = recorder.endRecording();
+final image = await picture.toImage(_sizeGrid * 20, _sizeGrid * 20);
+final byteData = await image.toByteData(format:
+ui.ImageByteFormat.png);
+final imageBytes = byteData!.buffer.asUint8List();
+final directory = await getApplicationDocumentsDirectory();
+final filePath = 
+'${directory.path}/pixel_art_${DateTime.now().millisecondsSinceEpoch}.png';
+final file = File(filePath);
+await file.writeAsBytes(imageBytes);
+//Logger.d("Pixel art saved to: $filePath");
+//context.read<AppData>().addCreation(filePath);
+ScaffoldMessenger.of(context).showSnackBar(
+SnackBar(content: Text('Pixel art saved to: $filePath')),
+
+);
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,6 +159,7 @@ class PixelartscreenState extends State<Pixelartscreen> {
                   ElevatedButton(
                     onPressed: () {
                       //logger.d('Button pressed');
+                      _savePixelArt();
                     },
                     child: const Text('Submit'),
                   ),
