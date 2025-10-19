@@ -4,6 +4,8 @@ import 'package:flutter_aplication_lab2/pages/list_art.dart';
 import 'package:flutter_aplication_lab2/pages/list_creation.dart';
 import 'package:flutter_aplication_lab2/pages/pixelArtScreen.dart';
 import 'package:flutter_aplication_lab2/pages/settings.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -17,6 +19,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   Color _currentColor = const Color.fromARGB(255, 255, 255, 255);
+
+  File? _lastImage;
 
   void ChangeColor(
     Color newColor,
@@ -90,6 +94,32 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Future<void> getLastImage() async {
+    final directory = await getApplicationDocumentsDirectory();
+    final files = directory.listSync();
+
+    // Filtramos solo archivos .png
+    final imageFiles = files
+        .where(
+          (file) => file is File && file.path.toLowerCase().endsWith('.png'),
+        )
+        .map((file) => File(file.path))
+        .toList();
+
+    if (imageFiles.isEmpty) return;
+
+    // Ordenamos por fecha de modificación
+    imageFiles.sort((a, b) {
+      final aTime = a.lastModifiedSync();
+      final bTime = b.lastModifiedSync();
+      return bTime.compareTo(aTime); // el más reciente primero
+    });
+
+    setState(() {
+      _lastImage = imageFiles.first; // guardamos solo el último
+    });
+  }
+
   void _incrementCounter() {
     setState(() {
       _counter++;
@@ -148,18 +178,23 @@ class _MyHomePageState extends State<MyHomePage> {
                       width: 400,
                       height: 400,
                     ),
-
                     Image.asset(
                       'assets/Pixel-Art-Pizza-2.webp',
                       width: 400,
                       height: 400,
                     ),
-
                     Image.asset(
                       'assets/Pixel-Art-Watermelon-3.webp',
                       width: 400,
                       height: 400,
                     ),
+                    if (_lastImage != null)
+                      Image.file(
+                        _lastImage!,
+                        width: 400,
+                        height: 400,
+                        fit: BoxFit.cover,
+                      ),
                   ],
                 ),
               ),
@@ -212,7 +247,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> get ChangeCounterValue {
     return <Widget>[
       //botones persistentes en el pie de la pantalla
-      ElevatedButton(
+      /*ElevatedButton(
         onPressed: _incrementCounter,
 
         child: const Icon(Icons.add),
@@ -225,6 +260,12 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _resetCounter,
 
         child: const Icon(Icons.refresh),
+      ),*/
+      ElevatedButton(
+        onPressed: () {
+          getLastImage();
+        },
+        child: const Icon(Icons.save_alt_outlined),
       ),
       ElevatedButton(
         onPressed: () {

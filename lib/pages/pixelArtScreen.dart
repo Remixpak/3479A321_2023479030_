@@ -6,6 +6,9 @@ import 'package:flutter_aplication_lab2/providers/configurationData.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:ui' as ui;
 import 'dart:io';
+import 'package:share_plus/share_plus.dart';
+import 'package:cross_file/cross_file.dart';
+
 /*class Pixelartscreen extends MyHomePage {
   const Pixelartscreen({super.key, required super.title});
   @override
@@ -41,6 +44,8 @@ class PixelartscreenState extends State<Pixelartscreen> {
     _sizeGrid * _sizeGrid,
     (index) => Colors.transparent,
   );
+
+  String? _lastSavedPath;
   @override
   void initState() {
     super.initState();
@@ -85,34 +90,63 @@ class PixelartscreenState extends State<Pixelartscreen> {
   }
 
   Future<void> _savePixelArt() async {
-final recorder = ui.PictureRecorder();
-final canvas = Canvas(recorder, Rect.fromLTWH(0, 0, _sizeGrid * 20.0,
-_sizeGrid * 20.0));
-for (int row = 0; row < _sizeGrid; row++) {
-for (int col = 0; col < _sizeGrid; col++) {
-final color = _cellColors[row * _sizeGrid + col];
-final paint = Paint()..color = color;
-final rect = Rect.fromLTWH(col * 20.0, row * 20.0, 20.0, 20.0);
-canvas.drawRect(rect, paint);
-}
-}
-final picture = recorder.endRecording();
-final image = await picture.toImage(_sizeGrid * 20, _sizeGrid * 20);
-final byteData = await image.toByteData(format:
-ui.ImageByteFormat.png);
-final imageBytes = byteData!.buffer.asUint8List();
-final directory = await getApplicationDocumentsDirectory();
-final filePath = 
-'${directory.path}/pixel_art_${DateTime.now().millisecondsSinceEpoch}.png';
-final file = File(filePath);
-await file.writeAsBytes(imageBytes);
-//Logger.d("Pixel art saved to: $filePath");
-//context.read<AppData>().addCreation(filePath);
-ScaffoldMessenger.of(context).showSnackBar(
-SnackBar(content: Text('Pixel art saved to: $filePath')),
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(
+      recorder,
+      Rect.fromLTWH(0, 0, _sizeGrid * 20.0, _sizeGrid * 20.0),
+    );
+    for (int row = 0; row < _sizeGrid; row++) {
+      for (int col = 0; col < _sizeGrid; col++) {
+        final color = _cellColors[row * _sizeGrid + col];
+        final paint = Paint()..color = color;
+        final rect = Rect.fromLTWH(col * 20.0, row * 20.0, 20.0, 20.0);
+        canvas.drawRect(rect, paint);
+      }
+    }
+    final picture = recorder.endRecording();
+    final image = await picture.toImage(_sizeGrid * 20, _sizeGrid * 20);
+    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    final imageBytes = byteData!.buffer.asUint8List();
+    final directory = await getApplicationDocumentsDirectory();
+    final filePath =
+        '${directory.path}/pixel_art_${DateTime.now().millisecondsSinceEpoch}.png';
+    final file = File(filePath);
+    await file.writeAsBytes(imageBytes);
+    setState(() {
+      _lastSavedPath = filePath;
+    });
+    //Logger.d("Pixel art saved to: $filePath");
+    //context.read<AppData>().addCreation(filePath);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Pixel art saved to: $filePath'),
+        action: SnackBarAction(
+          label: 'Compartir',
+          onPressed: () {
+            // compartir desde el SnackBar
+            _shareLastSaved();
+          },
+        ),
+      ),
+    );
+  }
 
-);
-}
+  Future<void> _shareLastSaved() async {
+    if (_lastSavedPath == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No hay imagen para compartir')),
+      );
+      return;
+    }
+    try {
+      // convert path -> XFile and use shareXFiles
+      await Share.shareXFiles([XFile(_lastSavedPath!)], text: 'Mi pixel art');
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error al compartir: $e')));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
