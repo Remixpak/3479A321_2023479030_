@@ -108,15 +108,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (imageFiles.isEmpty) return;
 
-    // Ordenamos por fecha de modificación
     imageFiles.sort((a, b) {
       final aTime = a.lastModifiedSync();
       final bTime = b.lastModifiedSync();
-      return bTime.compareTo(aTime); // el más reciente primero
+      return bTime.compareTo(aTime);
     });
 
     setState(() {
-      _lastImage = imageFiles.first; // guardamos solo el último
+      _lastImage = imageFiles.first;
     });
   }
 
