@@ -23,4 +23,14 @@ class SharedPreferencesService {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(KeyPalette) ?? 'default';
   }
+
+  Future<void> saveBackgroundOpacity(double opacity) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('background_opacity', opacity);
+  }
+
+  Future<double> LoadBackgroundOpacity() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getDouble('background_opacity') ?? 1.0;
+  }
 }

@@ -17,6 +17,9 @@ class AppData extends ChangeNotifier {
     notifyListeners();
   }*/
 
+  double _backgroundOpacity = 1.0;
+  double get backgroundOpacity => _backgroundOpacity;
+
   AppData() {
     loadData();
   }
@@ -24,6 +27,7 @@ class AppData extends ChangeNotifier {
   Future<void> loadData() async {
     _size = await _prefsService.LoadSize();
     _palette = await _prefsService.LoadPalette();
+    _backgroundOpacity = await _prefsService.LoadBackgroundOpacity();
 
     notifyListeners();
   }
@@ -37,6 +41,12 @@ class AppData extends ChangeNotifier {
   Future<void> setPalette(String newPalette) async {
     _palette = newPalette;
     await _prefsService.savePalette(newPalette);
+    notifyListeners();
+  }
+
+  Future<void> setBackgroundOpacity(double newOpacity) async {
+    _backgroundOpacity = newOpacity;
+    await _prefsService.saveBackgroundOpacity(newOpacity);
     notifyListeners();
   }
 

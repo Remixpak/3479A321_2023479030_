@@ -19,7 +19,7 @@ class SettingsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // --- Configuración del tamaño ---
+            // --- Configuracion del tamaño ---
             const Text(
               'Tamaño del pixel art:',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -37,7 +37,7 @@ class SettingsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            // --- Configuración de la paleta ---
+            // --- Configuracion de la paleta ---
             const Text(
               'Paleta de colores:',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -57,6 +57,19 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: 20),
             Text('Tamaño actual: ${appData.size}px'),
             Text('Paleta seleccionada: ${appData.palette}'),
+
+            // --- Configuracion de la opacidad ---
+            Text('Opacidad de fondo'),
+            Slider(
+              value: appData.backgroundOpacity,
+              min: 0.1,
+              max: 1.0,
+              divisions: 10,
+              label: '${(appData.backgroundOpacity * 100).toInt()}%',
+              onChanged: (value) {
+                context.read<AppData>().setBackgroundOpacity(value);
+              },
+            ),
           ],
         ),
       ),
